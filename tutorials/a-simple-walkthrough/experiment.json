@@ -1,105 +1,28 @@
 {
     "title": "What is the impact of an expired certificate on our application chain?",
     "description": "If a certificate expires, we should gracefully deal with the issue.",
-    "tags": ["tls"],
+    "tags": ["python",
+            "flask"
+    ],
     "steady-state-hypothesis": {
-        "title": "Application responds",
+        "title": "Website is OK",
         "probes": [
             {
                 "type": "probe",
-                "name": "the-astre-service-must-be-running",
-                "tolerance": true,
-                "provider": {
-                    "type": "python",
-                    "module": "os.path",
-                    "func": "exists",
-                    "arguments": {
-                        "path": "astre.pid"
-                    }
-                }
-            },
-            {
-                "type": "probe",
-                "name": "the-sunset-service-must-be-running",
-                "tolerance": true,
-                "provider": {
-                    "type": "python",
-                    "module": "os.path",
-                    "func": "exists",
-                    "arguments": {
-                        "path": "sunset.pid"
-                    }
-                }
-            },
-            {
-                "type": "probe",
-                "name": "we-can-request-sunset",
+                "name": "website must be upp and running",
                 "tolerance": 200,
                 "provider": {
                     "type": "http",
-                    "timeout": 3,
-                    "verify_tls": false,
-                    "url": "https://localhost:8443/city/Paris"
+                    "timeout":[
+                        3,
+                        5
+                    ],
+                "url": "https://www.johnmartincada.com",
+                "method": "GET"
                 }
             }
         ]
     },
-    "method": [
-        {
-            "type": "action",
-            "name": "swap-to-expired-cert",
-            "provider": {
-                "type": "process",
-                "path": "cp",
-                "arguments": "expired-cert.pem cert.pem"
-            }
-        },
-        {
-            "type": "probe",
-            "name": "read-tls-cert-expiry-date",
-            "provider": {
-                "type": "process",
-                "path": "openssl",
-                "arguments": "x509 -enddate -noout -in cert.pem"
-            }
-        },
-        {
-            "type": "action",
-            "name": "restart-astre-service-to-pick-up-certificate",
-            "provider": {
-                "type": "process",
-                "path": "pkill",
-                "arguments": "--echo -HUP -F astre.pid"
-            }
-        },
-        {
-            "type": "action",
-            "name": "restart-sunset-service-to-pick-up-certificate",
-            "provider": {
-                "type": "process",
-                "path": "pkill",
-                "arguments": "--echo -HUP -F sunset.pid"
-            },
-            "pauses": {
-                "after": 1
-            }
-        }
-    ],
-    "rollbacks": [
-        {
-            "type": "action",
-            "name": "swap-to-valid-cert",
-            "provider": {
-                "type": "process",
-                "path": "cp",
-                "arguments": "valid-cert.pem cert.pem"
-            }
-        },
-        {
-            "ref": "restart-astre-service-to-pick-up-certificate"
-        },
-        {
-            "ref": "restart-sunset-service-to-pick-up-certificate"
-        }
-    ]
+    "method": [],
+    "rollbacks": []
 }

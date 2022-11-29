@@ -1,0 +1,104 @@
+{
+  "chaoslib-version": "1.29.0",
+  "platform": "Linux-5.4.72-microsoft-standard-WSL2-x86_64-with-glibc2.29",
+  "node": "DESKTOP-FSQ0B5M",
+  "experiment": {
+    "title": "What is the impact of an expired certificate on our application chain?",
+    "description": "If a certificate expires, we should gracefully deal with the issue.",
+    "tags": [
+      "python",
+      "flask"
+    ],
+    "steady-state-hypothesis": {
+      "title": "Website is OK",
+      "probes": [
+        {
+          "type": "probe",
+          "name": "website must be upp and running",
+          "tolerance": 200,
+          "provider": {
+            "type": "http",
+            "timeout": [
+              3,
+              5
+            ],
+            "url": "https://www.johnmazrtincada.com",
+            "method": "GET"
+          }
+        }
+      ]
+    },
+    "method": [],
+    "rollbacks": [],
+    "dry": null
+  },
+  "start": "2022-11-29T08:49:30.761846",
+  "status": "failed",
+  "deviated": false,
+  "steady_states": {
+    "before": {
+      "steady_state_met": false,
+      "probes": [
+        {
+          "activity": {
+            "type": "probe",
+            "name": "website must be upp and running",
+            "tolerance": 200,
+            "provider": {
+              "type": "http",
+              "timeout": [
+                3,
+                5
+              ],
+              "url": "https://www.johnmazrtincada.com",
+              "method": "GET"
+            }
+          },
+          "output": null,
+          "status": "failed",
+          "exception": [
+            "Traceback (most recent call last):\n",
+            "  File \"/mnt/c/Users/blaiz/Documents/venvs/chaostk/lib/python3.8/site-packages/urllib3/connection.py\", line 174, in _new_conn\n    conn = connection.create_connection(\n",
+            "  File \"/mnt/c/Users/blaiz/Documents/venvs/chaostk/lib/python3.8/site-packages/urllib3/util/connection.py\", line 72, in create_connection\n    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):\n",
+            "  File \"/usr/lib/python3.8/socket.py\", line 918, in getaddrinfo\n    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):\n",
+            "socket.gaierror: [Errno -2] Name or service not known\n",
+            "\nDuring handling of the above exception, another exception occurred:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/mnt/c/Users/blaiz/Documents/venvs/chaostk/lib/python3.8/site-packages/urllib3/connectionpool.py\", line 703, in urlopen\n    httplib_response = self._make_request(\n",
+            "  File \"/mnt/c/Users/blaiz/Documents/venvs/chaostk/lib/python3.8/site-packages/urllib3/connectionpool.py\", line 386, in _make_request\n    self._validate_conn(conn)\n",
+            "  File \"/mnt/c/Users/blaiz/Documents/venvs/chaostk/lib/python3.8/site-packages/urllib3/connectionpool.py\", line 1042, in _validate_conn\n    conn.connect()\n",
+            "  File \"/mnt/c/Users/blaiz/Documents/venvs/chaostk/lib/python3.8/site-packages/urllib3/connection.py\", line 358, in connect\n    self.sock = conn = self._new_conn()\n",
+            "  File \"/mnt/c/Users/blaiz/Documents/venvs/chaostk/lib/python3.8/site-packages/urllib3/connection.py\", line 186, in _new_conn\n    raise NewConnectionError(\n",
+            "urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPSConnection object at 0x7f60cb887d30>: Failed to establish a new connection: [Errno -2] Name or service not known\n",
+            "\nDuring handling of the above exception, another exception occurred:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/mnt/c/Users/blaiz/Documents/venvs/chaostk/lib/python3.8/site-packages/requests/adapters.py\", line 489, in send\n    resp = conn.urlopen(\n",
+            "  File \"/mnt/c/Users/blaiz/Documents/venvs/chaostk/lib/python3.8/site-packages/urllib3/connectionpool.py\", line 787, in urlopen\n    retries = retries.increment(\n",
+            "  File \"/mnt/c/Users/blaiz/Documents/venvs/chaostk/lib/python3.8/site-packages/urllib3/util/retry.py\", line 592, in increment\n    raise MaxRetryError(_pool, url, error or ResponseError(cause))\n",
+            "urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='www.johnmazrtincada.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7f60cb887d30>: Failed to establish a new connection: [Errno -2] Name or service not known'))\n",
+            "\nDuring handling of the above exception, another exception occurred:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/mnt/c/Users/blaiz/Documents/venvs/chaostk/lib/python3.8/site-packages/chaoslib/provider/http.py\", line 50, in run_http_activity\n    r = s.get(\n",
+            "  File \"/mnt/c/Users/blaiz/Documents/venvs/chaostk/lib/python3.8/site-packages/requests/sessions.py\", line 600, in get\n    return self.request(\"GET\", url, **kwargs)\n",
+            "  File \"/mnt/c/Users/blaiz/Documents/venvs/chaostk/lib/python3.8/site-packages/requests/sessions.py\", line 587, in request\n    resp = self.send(prep, **send_kwargs)\n",
+            "  File \"/mnt/c/Users/blaiz/Documents/venvs/chaostk/lib/python3.8/site-packages/requests/sessions.py\", line 701, in send\n    r = adapter.send(request, **kwargs)\n",
+            "  File \"/mnt/c/Users/blaiz/Documents/venvs/chaostk/lib/python3.8/site-packages/requests/adapters.py\", line 565, in send\n    raise ConnectionError(e, request=request)\n",
+            "requests.exceptions.ConnectionError: HTTPSConnectionPool(host='www.johnmazrtincada.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7f60cb887d30>: Failed to establish a new connection: [Errno -2] Name or service not known'))\n",
+            "\nDuring handling of the above exception, another exception occurred:\n\n",
+            "chaoslib.exceptions.ActivityFailed: failed to connect to https://www.johnmazrtincada.com: HTTPSConnectionPool(host='www.johnmazrtincada.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7f60cb887d30>: Failed to establish a new connection: [Errno -2] Name or service not known'))\n"
+          ],
+          "start": "2022-11-29T08:49:30.763457",
+          "end": "2022-11-29T08:49:30.972117",
+          "duration": 0.20866,
+          "tolerance_met": false
+        }
+      ]
+    },
+    "after": null,
+    "during": []
+  },
+  "run": [],
+  "rollbacks": [],
+  "end": "2022-11-29T08:49:30.972854",
+  "duration": 0.21929669380187988
+}
